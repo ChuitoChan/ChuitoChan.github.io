@@ -1,32 +1,56 @@
-# About
+# Carte Noire
 
-This is my blog based on jekyll. And I change the style and interactive. If you want to use this model of the blog. **Please give a star at this repository**. Then you can clone it as your blog model.
+A simple Jekyll theme for blogging. Not named after the coffee.
 
-You can visit [here](http://gaohaoyang.github.io) to see this blog.
+![Homepage](http://i.imgur.com/xlmHArV.png)
 
----
+### Article
+![Article](http://i.imgur.com/8rD8FfC.png)
 
-这是我的博客，基于 jekyll。我改了所有默认的样式和交互。如果你想使用这个博客模板。**请先在这个仓库上点个star吧**，这也是对我的肯定和鼓励，谢谢了。然后你可以克隆这个仓库用作你自己的博客。
+### Disqus Comments
+![Comments](http://i.imgur.com/TBZHQwF.png)
 
-博客访问地址：[点击这里](http://gaohaoyang.github.io)
+### Posts grouped by year
+![All Posts](http://i.imgur.com/9bNs2Sc.png)
 
-**使用时请注明模板来源:  Jekyll theme by [Gaohaoyang](https://github.com/Gaohaoyang/gaohaoyang.github.io)**
+### JavaScript Search
+![Search](http://i.imgur.com/yQqMeSl.png)
 
-<!--
+### Menu by mmenu
+![Menu](http://i.imgur.com/SClrNSH.png)
 
-## 被引用信息
+## Contact
+If you wish to contact me regarding this theme please raise an issue on GitHub,
+tweet me [@_jacobtomlinson](http://www.twitter.com/_jacobtomlinson) or email me
+[jacob@jacobtomlinson.co.uk](mailto:jacob@jacobtomlinson.co.uk).
 
-使用了我的模板并写明来源的人：   
+## Contribution
+Pull requests are very welcome.
 
-* [dreamholy](http://dreamholy.github.io/)
+## Theme
+This jekyll theme has been created from scratch. Ideas and inspiration are taken
+from other places but the code is my own.
 
-没有注明来源的人：
+## Tools and Libraries
+The following tools and libraries are used in this theme
 
-* [yangshuailing](http://yangshuailing.github.io/com/)
-* [huapu728](http://huapu728.github.io/)
-* [greatbuger](http://greatbuger.github.io/) 
+### JavaScript
+ * [jQuery](http://jquery.com/)
+ * [MMenu](http://mmenu.frebsite.nl/)
+ * [HighlightJS](https://highlightjs.org/)
+ * [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search)
 
+### CSS
+ * [Bootstrap](http://getbootstrap.com/)
+ * [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
 
--->
+### Social
+ * [AddThis](http://www.addthis.com/)
+ * [Disqus](https://disqus.com/)
 
+### Other
+ * [Real Favicon Generator](http://realfavicongenerator.net/)
+ * [Google Analytics](http://www.google.com/analytics/)
 
+## License
+The jekyll theme, HTML, CSS and JavaScript is licensed under GPLv3 (unless stated otherwise in the file).
