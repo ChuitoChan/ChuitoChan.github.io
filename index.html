@@ -1,16 +1,36 @@
 ---
-layout: default
-title: Tufte
+layout: page
+description: "A Clean Blog Theme by Start Bootstrap"
 ---
-  <h1 class="content-listing-header sans">Articles</h1>
-  <ul class="content">
-    {% for post in site.posts %}
-      <li class="listing">
-      	<hr class="slender">
-      	<a href="{{ post.url }}"><h4 class="contrast">{{ post.title }}</h4></a>
-      	<span class="smaller">{{ post.date | date: "%B %-d, %Y" }}</span>  <br/>
-		<div>{{ post.excerpt }}</div>
-		
-      </li>
-    {% endfor %}
-  </ul>
+
+{% for post in paginator.posts %}
+<div class="post-preview">
+    <a href="{{ post.url | prepend: site.baseurl }}">
+        <h2 class="post-title">            {{ post.title }}
+        </h2>
+        {% if post.subtitle %}
+        <h3 class="post-subtitle">
+            {{ post.subtitle }}
+        </h3>
+        {% endif %}
+    </a>
+    <p class="post-meta">Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}</p>
+</div>
+<hr>
+{% endfor %}
+
+<!-- Pager -->
+{% if paginator.total_pages > 1 %}
+<ul class="pager">
+    {% if paginator.previous_page %}
+    <li class="previous">
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
+    </li>
+    {% endif %}
+    {% if paginator.next_page %}
+    <li class="next">
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
