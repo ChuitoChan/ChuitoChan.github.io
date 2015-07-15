@@ -12,7 +12,7 @@ theme:
 
   # Header and footer text
   header_text: >
-     <p>Welcome to Chuito's Blog</p>
+     <p>Welcome to Chuito's Code</p>
 
      <p>A brave journey into the functional programming</p>
   header_text_feature_image:
