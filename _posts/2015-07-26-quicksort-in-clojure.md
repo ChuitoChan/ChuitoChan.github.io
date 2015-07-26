@@ -29,7 +29,19 @@ Quicksort 的基本思路就是：<br>
 
 同样也可以用`for`宏来实现`filter`和`remove`的功能：<br>
 
+{% highlight js %}
+// count to ten
+for (var i = 1; i <= 10; i++) {
+    console.log(i);
+}
 
+// count to twenty
+var j = 0;
+while (j < 20) {
+    j++;
+    console.log(j);
+}
+{% endhighlight %}
 
 
 {% highlight clojure %}
@@ -38,7 +50,7 @@ Quicksort 的基本思路就是：<br>
     (lazy-cat (qsort (for [x xs :when (< x pivot)] x))
               [pivot]
               (qsort (for [x xs :when (>= x pivot)] x)))))
-{% highlight clojure %}
+{% endghlight clojure %}
 
 也可以用``quasiquote（`）``来拼接两个子序列：
 ```clojure
