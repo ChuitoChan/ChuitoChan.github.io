@@ -12,7 +12,7 @@ theme:
 
   # Header and footer text
   header_text: >
-     <p>(apply play :with :programming)</p>
+     <p>(apply  play  :with  :programming)</p>
 
      
   header_text_feature_image:
