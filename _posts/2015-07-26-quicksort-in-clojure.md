@@ -70,7 +70,7 @@ feature-img: "img/sample_feature_img.png"
 <br>
 <br>
 
-最后，可以给`qsort`函数再增加一个参数`pred`作为比较的函数，从而可以通过传入不同的`pred`来实现不同的排序方式。
+最后，可以给`qsort`函数再增加一个参数`pred`作为比较的函数，从而可以通过先传入不同的`pred`来返回实现不同的排序方式。
 {% highlight clojure linenos %}
 ;; Quicksort
 (defn qsort [pred]
@@ -84,13 +84,36 @@ feature-img: "img/sample_feature_img.png"
 (def ascending-quicksort (qsort <))
 ;; descending order
 (def descending-quicksort (qsort >))
-{% endhighlight clojure %}
-
 (def coll [9 6 5 4 9 0 4 8 6 2])
 (ascending-quicksort coll)
 ;=> (0 2 4 4 5 6 6 8 9 9)
 (descending-quicksort coll)
 ;=> (9 9 8 6 6 5 4 4 2 0)
+{% endhighlight clojure %}
+
+{% highlight clojure linenos %}
+;; Quicksort
+(defn qsort
+  ([coll] (qsort < coll))
+  ([pred [pivot & xs]]
+    (when pivot
+      (lazy-cat (qsort pred (filter #(pred % pivot) xs))
+                [pivot]
+                (qsort pred (remove #(pred % pivot) xs))))))
+  (fn qsort-help [[pivot & xs]]
+    (when pivot
+    )))
+              
+;; ascending order
+(def ascending-quicksort (qsort <))
+;; descending order
+(def descending-quicksort (qsort >))
+(def coll [9 6 5 4 9 0 4 8 6 2])
+(ascending-quicksort coll)
+;=> (0 2 4 4 5 6 6 8 9 9)
+(descending-quicksort coll)
+;=> (9 9 8 6 6 5 4 4 2 0)
+{% endhighlight clojure %}
 
 好了，就这样，就这样水了一篇<(‾︶‾)>
 
