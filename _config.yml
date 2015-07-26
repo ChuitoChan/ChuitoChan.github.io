@@ -1,73 +1,37 @@
-# SITE CONFIGURATION
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "https://ChuitoChan.github.io" # the base hostname & protocol for your site
+# Dependencies
+markdown:            redcarpet
+highlighter:         pygments
 
-# THEME-SPECIFIC CONFIGURATION
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+relative_permalinks: true
+
+# Setup
+title:               Naringu
+tagline:             'A Hacker like jekyll theme'
+description:         'oonlab is crafted with <3 by ariestiyansyah.'
+url:                 http://naringu.oonlab.com
+baseurl:             /
+paginate:            7
+
+# About/contact
+author:
+  name:              Rizky Ariestiyansyah
+  url:               https://twitter.com/ariestiyansyah
+  email:             ariestiyansyah.rizky@gmail.com
+
+# Custom vars
+version:             2.0
+
+# Social Media
+github:				http://github.com/ariestiyansyah
+twitter:			http://twitter.com/ariestiyansyah
+disqus:             testnaringu
+
+# Theme Author (Please don't edit this line cause of MIT LICENSE rules)
 theme:
-  # Meta
-  title: Chuito's Code
-  avatar: Ted.png
-  gravatar: # Email MD5 hash
-  description: "A website with blog posts and pages" # used by search engines
-
-  # Header and footer text
-  header_text: >
-     <p>(apply  play  :with  :programming)</p>
-
-     
-  header_text_feature_image:
-  footer_text: >
-    Copyright © Chuito's Code 2015
-
-  # Icons
-  rss: true
-  email_address: # Full email address, e.g. "sam@example.com"
-  behance:
-  bitbucket:
-  dribbble:
-  facebook:
-  flickr:
-  github: "ChuitoChan/ChuitoChan.github.io"
-  google_plus:
-  instagram:
-  linkedin:  # Full URL
-  pinterest:
-  reddit:
-  soundcloud:
-  stack_exchange:  # Full URL
-  steam:
-  tumblr:
-  twitter: 
-  wordpress:
-  youtube:
-
-  # Scripts
-  google_analytics: # Tracking ID, e.g. "UA-000000-01"
-  disqus_shortname:
-  katex: true # Enable if using math markup
-
-  # Localization strings
-  str_follow_on: "Follow on"
-  str_rss_follow: "Follow RSS feed"
-  str_email: "Email"
-  str_next: "Next"
-  str_prev: "Prev"
-  str_continue_reading: "Continue reading"
-
-  # Colours, typography and padding
-  # Open the "_sass > base" folder, and open "_variables.scss"
-  google_fonts: "Source+Sans+Pro:400,700,700italic,400italic"
-  
-  # Post navigation
-  post_navigation: false
-
-# PAGINATION
-paginate: 5
-paginate_path: "blog/page:num"
-
-# BUILD SETTINGS
-markdown: kramdown
-highlighter: pygments
-sass:
-  sass_dir: _sass
-  style: :compressed
+  creator:			Rizky Ariestiyansyah
+  codename:			Naringu
+  link:             https://github.com/ariestiyansyah/naringu

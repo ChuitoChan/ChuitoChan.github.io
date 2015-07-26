@@ -1,14 +1,14 @@
 ---
 layout: post
 title: Quicksort in Clojure
-feature-img: "img/sample_feature_img.png"
+- naringu
 ---
 
 最近在学习`Robert Sedgewick`老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算Quicksort了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下Quicksort。
 
 Quicksort 的基本思路就是：
 
-* 在序列中找一个数作为基准（pivot）（暂时取第一个数吧）
+ 在序列中找一个数作为基准（pivot）（暂时取第一个数吧）
 * 对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）
 * 再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~
 
