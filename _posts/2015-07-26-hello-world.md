@@ -9,4 +9,4 @@ title: Hello World
 
 哈哈！哈哈！我现在是有Blog的程序猿啦~~~~~~~~~~~~~~~~
 
-![Geometric pattern with fading gradient](/img/hello-world.jpg)
+---
