@@ -14,6 +14,7 @@ Quicksort 的基本思路就是：<br>
 在`Clojure`里面的函数`filter`和`remove`可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以`Quicksort`在`Clojure`里可以这样写：<br>
 
 
+
 ```clojure
 (defn qsort [[pivot & xs]]
   (when pivot
@@ -27,6 +28,10 @@ Quicksort 的基本思路就是：<br>
 >`lazy-cat`是用来惰性地拼接筛选出来的子序列
 
 同样也可以用`for`宏来实现`filter`和`remove`的功能：<br>
+
+
+
+
 ```clojure
 (defn qsort [[pivot & xs]]
   (when pivot
