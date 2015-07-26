@@ -24,8 +24,8 @@ feature-img: "img/sample_feature_img.png"
                 (qsort (remove smaller? xs))))))
 {% endhighlight clojure %}
 
-* `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给pivot，<br> 
-　剩余部分bind给xs
+* `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给*pivot*，<br> 
+　剩余部分bind给*xs*
 * `smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
 * `lazy-cat`是用来惰性地拼接两个筛选出来并排好序的子序列
 <br>
@@ -55,7 +55,8 @@ feature-img: "img/sample_feature_img.png"
 
 * 这样写感觉有点逼格，但是呢，速度实在不如前面两种写法→_→
 
-*Quicksort*里有一种升级版叫*3-way-Quicksort*，它在序列中重复的数比较多时食用更佳哦！它的思想和普通*Quicksort*差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
+*Quicksort*有一种升级版叫*3-way-Quicksort*，它在序列中重复的数比较多时食用更佳哦！它的思想和普通*Quicksort*差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
+
 {% highlight clojure linenos %}
 (defn three-way-qsort [[pivot :as xs]]
   (when pivot
@@ -64,7 +65,7 @@ feature-img: "img/sample_feature_img.png"
               (three-way-qsort (filter #(> % pivot) xs)))))
 {% endhighlight clojure %}
 
-* 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧
+* 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧所以可以直接用一个set，即`#{pivot}`作为判断一个数是否与`pivot`相等的函数
 <br>
 <br>
 
