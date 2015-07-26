@@ -110,6 +110,7 @@ feature-img: "img/sample_feature_img.png"
 (qsort > coll)
 ;=> (9 9 8 6 6 5 4 4 2 0)
 {% endhighlight clojure %}
+<br>
 
 好了，就这样，就这样水了一篇啦<(‾︶‾)>
 
