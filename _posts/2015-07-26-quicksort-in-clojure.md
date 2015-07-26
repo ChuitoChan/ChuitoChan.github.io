@@ -103,6 +103,13 @@ feature-img: "img/sample_feature_img.png"
       (lazy-cat (qsort pred (filter #(pred % pivot) xs))
                 [pivot]
                 (qsort pred (remove #(pred % pivot) xs))))))
+                
+;; ascending order
+(qsort coll)
+;=> (0 2 4 4 5 6 6 8 9 9)
+;; descending order
+(qsort > coll)
+;=> (9 9 8 6 6 5 4 4 2 0)
 {% endhighlight clojure %}
 
 好了，就这样，就这样水了一篇啦<(‾︶‾)>
