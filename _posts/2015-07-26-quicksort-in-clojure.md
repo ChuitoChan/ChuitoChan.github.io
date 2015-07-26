@@ -4,7 +4,7 @@ title: Quicksort in Clojure
 feature-img: "img/sample_feature_img.png"
 ---
 
-最近在学习*Robert Sedgewick*老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算*Quicksort*了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下*Quicksort*。
+最近在学习*Robert Sedgewick*老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最`NB`的要算*Quicksort*了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下*Quicksort*。
 
 *Quicksort* 的基本思路就是：
 
