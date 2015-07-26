@@ -17,6 +17,7 @@ Quicksort 的基本思路就是：
 
 
 {% highlight clojure linenos %}
+;; quicksort
 (defn qsort [[pivot & xs]]
   (when pivot
     (let [smaller? #(< % pivot)]
@@ -33,7 +34,7 @@ Quicksort 的基本思路就是：
 
 
 
-{% highlight clojure %}
+{% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
   (when pivot
     (lazy-cat (qsort (for [x xs :when (< x pivot)] x))
@@ -43,7 +44,7 @@ Quicksort 的基本思路就是：
 
 也可以用``quasiquote（`）``来拼接两个子序列：
 
-{% highlight clojure %}
+{% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
   (when pivot
     `(~@(qsort (filter #(> % pivot) xs))
@@ -54,7 +55,7 @@ Quicksort 的基本思路就是：
 >这样写逼格是有，但是呢，速度实在不如前面两种写法→_→
 
 `Quicksort`里有一种叫`3-way-Quicksort`，当序列中重复的数比较多时食用更佳！它的思想和普通Quicksort差不多，只是它分区的时候不止分左右两区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
-{% highlight clojure %}
+{% highlight clojure linenos %}
 (defn three-way-qsort [[pivot :as xs]]
   (when pivot
     (lazy-cat (three-way-qsort (filter #(< % pivot) xs))
