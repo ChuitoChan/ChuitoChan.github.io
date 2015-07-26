@@ -4,7 +4,7 @@ title: Quicksort in Clojure
 feature-img: "img/sample_feature_img.png"
 ---
 
-最近在学习*Robert Sedgewick*老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最`NB`的要算*Quicksort*了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下*Quicksort*。
+最近在学习*Robert Sedgewick*老头子的《算法》红宝书，刚好看到`Sorting`那一部分。各种有趣的排序算法，真是大开眼界，其中最`NB`的要算*Quicksort*了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下*Quicksort*。
 
 *Quicksort* 的基本思路就是：
 
@@ -23,8 +23,9 @@ feature-img: "img/sample_feature_img.png"
                 (qsort (remove smaller? xs))))))
 {% endhighlight clojure %}
 
+* `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给pivot，剩余部分bind给xs
 * `smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
-* `lazy-cat`是用来惰性地拼接筛选出来的子序列
+* `lazy-cat`是用来惰性地拼接两个筛选出来并排好序的子序列
 <br>
 <br>
 
@@ -52,7 +53,7 @@ feature-img: "img/sample_feature_img.png"
 
 * 这样写感觉有点逼格，但是呢，速度实在不如前面两种写法→_→
 
-*Quicksort*里有一种叫`*3-way-Quicksort*`，它在序列中重复的数比较多时食用更佳哦！它的思想和普通*Quicksort*差不多，只是它分区的时候不止分左右两区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
+*Quicksort*里有一种升级版叫*3-way-Quicksort*，它在序列中重复的数比较多时食用更佳哦！它的思想和普通*Quicksort*差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
 {% highlight clojure linenos %}
 (defn three-way-qsort [[pivot :as xs]]
   (when pivot
