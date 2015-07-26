@@ -23,7 +23,8 @@ feature-img: "img/sample_feature_img.png"
                 (qsort (remove smaller? xs))))))
 {% endhighlight clojure %}
 
-* `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给pivot，<br>  剩余部分bind给xs
+* `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给pivot，<br> 
+>剩余部分bind给xs
 * `smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
 * `lazy-cat`是用来惰性地拼接两个筛选出来并排好序的子序列
 <br>
