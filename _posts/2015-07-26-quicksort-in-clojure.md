@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Quicksort in Clojure
-feature-img: "img/sort.png"
+feature-img: "img/sample_feature_img.png"
 ---
 
 最近在学习`Robert Sedgewick`老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算Quicksort了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下Quicksort。
@@ -12,6 +12,8 @@ Quicksort 的基本思路就是：<br>
 * 再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~
 
 在`Clojure`里面的函数`filter`和`remove`可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以`Quicksort`在`Clojure`里可以这样写：<br>
+
+
 ```clojure
 (defn qsort [[pivot & xs]]
   (when pivot
