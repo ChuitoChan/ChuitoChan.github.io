@@ -15,7 +15,7 @@ Quicksort 的基本思路就是：<br>
 
 
 
-```clojure
+``` clojure
 (defn qsort [[pivot & xs]]
   (when pivot
     (let [smaller? #(< % pivot)]
@@ -32,13 +32,13 @@ Quicksort 的基本思路就是：<br>
 
 
 
-```clojure
+{% highlight clojure %}
 (defn qsort [[pivot & xs]]
   (when pivot
     (lazy-cat (qsort (for [x xs :when (< x pivot)] x))
               [pivot]
               (qsort (for [x xs :when (>= x pivot)] x)))))
-```
+{% highlight clojure %}
 
 也可以用``quasiquote（`）``来拼接两个子序列：
 ```clojure
@@ -64,3 +64,10 @@ Quicksort 的基本思路就是：<br>
 
 
 好了，就这样，就这样水了一篇<(‾︶‾)>
+
+
+```
+require 'redcarpet'
+markdown = Redcarpet.new("Hello World!")
+puts markdown.to_html
+```
