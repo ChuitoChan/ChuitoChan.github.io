@@ -23,7 +23,7 @@ Quicksort 的基本思路就是：
       (lazy-cat (qsort (filter smaller? xs))
                 [pivot]
                 (qsort (remove smaller? xs))))))
-{% endhighlight clojure %}
+{% endhighlight %}
 
 >`smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
 >`lazy-cat`是用来惰性地拼接筛选出来的子序列
@@ -39,7 +39,7 @@ Quicksort 的基本思路就是：
     (lazy-cat (qsort (for [x xs :when (< x pivot)] x))
               [pivot]
               (qsort (for [x xs :when (>= x pivot)] x)))))
-{% endhighlight clojure %}
+{% endhighlight %}
 
 也可以用``quasiquote（`）``来拼接两个子序列：
 
@@ -49,7 +49,7 @@ Quicksort 的基本思路就是：
     `(~@(qsort (filter #(> % pivot) xs))
       ~pivot
       ~@(qsort (remove #(> % pivot) xs)))))
-{% endhighlight clojure %}
+{% endhighlight %}
 
 >这样写逼格是有，但是呢，速度实在不如前面两种写法→_→
 
@@ -60,10 +60,11 @@ Quicksort 的基本思路就是：
     (lazy-cat (three-way-qsort (filter #(< % pivot) xs))
               (filter #{pivot} xs)
               (three-way-qsort (filter #(> % pivot) xs)))))
-{% endhighlight clojure %}
+{% endhighlight %}
 
 >在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧
 
 
 好了，就这样，就这样水了一篇<(‾︶‾)>
----
+
+----
