@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Quicksort in Clojure
-- naringu
+feature-img: "img/sample_feature_img.png"
 ---
 
 最近在学习`Robert Sedgewick`老头子的《算法》红宝书，刚好看到Sorting那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算Quicksort了。书里的算法都是用`Java`实现的，但是`Java`写多了，真的有点无聊（而且手累），所以我就尝试用`Clojure`来实现一下Quicksort。
@@ -23,7 +23,7 @@ Quicksort 的基本思路就是：
       (lazy-cat (qsort (filter smaller? xs))
                 [pivot]
                 (qsort (remove smaller? xs))))))
-{% endhighlight %}
+{% endhighlight clojure %}
 
 >`smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
 >`lazy-cat`是用来惰性地拼接筛选出来的子序列
@@ -39,7 +39,7 @@ Quicksort 的基本思路就是：
     (lazy-cat (qsort (for [x xs :when (< x pivot)] x))
               [pivot]
               (qsort (for [x xs :when (>= x pivot)] x)))))
-{% endhighlight %}
+{% endhighlight clojure %}
 
 也可以用``quasiquote（`）``来拼接两个子序列：
 
@@ -49,7 +49,7 @@ Quicksort 的基本思路就是：
     `(~@(qsort (filter #(> % pivot) xs))
       ~pivot
       ~@(qsort (remove #(> % pivot) xs)))))
-{% endhighlight %}
+{% endhighlight clojure %}
 
 >这样写逼格是有，但是呢，速度实在不如前面两种写法→_→
 
@@ -60,11 +60,10 @@ Quicksort 的基本思路就是：
     (lazy-cat (three-way-qsort (filter #(< % pivot) xs))
               (filter #{pivot} xs)
               (three-way-qsort (filter #(> % pivot) xs)))))
-{% endhighlight %}
+{% endhighlight clojure %}
 
 >在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧
 
 
 好了，就这样，就这样水了一篇<(‾︶‾)>
 
-----
