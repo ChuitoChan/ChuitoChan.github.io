@@ -7,16 +7,16 @@
 .k { color: #F8532A; font-weight: bold } /* Keyword */
 .o { color: #F8532A; font-weight: bold } /* Operator */
 .cm { color: #999988; font-style: italic } /* Comment.Multiline */
-.cp { color: #777777; font-weight: bold; font-style: italic } /* Comment.Preproc */
+.cp { color: #999999; font-weight: bold; font-style: italic } /* Comment.Preproc */
 .c1 { color: #999988; font-style: italic } /* Comment.Single */
-.cs { color: #777777; font-weight: bold; font-style: italic } /* Comment.Special */
+.cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
 .gd { color: #F8532A; background-color: #ffdddd } /* Generic.Deleted */
 .ge { color: #F8532A; font-style: italic } /* Generic.Emph */
 .gr { color: #aa0000 } /* Generic.Error */
-.gh { color: #777777 } /* Generic.Heading */
+.gh { color: #999999 } /* Generic.Heading */
 .gi { color: #F8532A; background-color: #ddffdd } /* Generic.Inserted */
 .go { color: #888888 } /* Generic.Output */
-.gp { color: #555555 } /* Generic.Prompt */
+.gp { color: #999990 } /* Generic.Prompt */
 .gs { font-weight: bold } /* Generic.Strong */
 .gu { color: #aaaaaa } /* Generic.Subheading */
 .gt { color: #aa0000 } /* Generic.Traceback */
@@ -37,7 +37,7 @@
 .ne { color: #FF1111; font-weight: bold } /* Name.Exception */
 .nf { color: #FF1111; font-weight: bold } /* Name.Function */
 .nl { color: #FF1111; font-weight: bold } /* Name.Label */
-.nn { color: #555555 } /* Name.Namespace */
+.nn { color: #999990 } /* Name.Namespace */
 .nt { color: #000080 } /* Name.Tag */
 .nv { color: #008080 } /* Name.Variable */
 .ow { color: #F8532A; font-weight: bold } /* Operator.Word */
@@ -57,7 +57,7 @@
 .sr { color: #009926 } /* Literal.String.Regex */
 .s1 { color: #d01040 } /* Literal.String.Single */
 .ss { color: #7907C6 } /* Literal.String.Symbol */
-.bp { color: #777777 } /* Name.Builtin.Pseudo */
+.bp { color: #999999 } /* Name.Builtin.Pseudo */
 .vc { color: #008080 } /* Name.Variable.Class */
 .vg { color: #008080 } /* Name.Variable.Global */
 .vi { color: #008080 } /* Name.Variable.Instance */
