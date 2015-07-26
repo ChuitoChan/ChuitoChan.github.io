@@ -68,6 +68,7 @@ feature-img: "img/sample_feature_img.png"
 * 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧所以可以直接用一个set，即`#{pivot}`<br>
 　作为判断一个数是否与`pivot`相等的函数
 <br>
+<br>
 
 最后，可以将`qsort`定义为接收一个`pred`参数，返回一个以`pred`作为比较函数的`Quicksort`函数，从而实现不同的排序方式。
 {% highlight clojure linenos %}
