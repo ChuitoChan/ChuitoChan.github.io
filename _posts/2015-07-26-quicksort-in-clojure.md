@@ -65,24 +65,32 @@ feature-img: "img/sample_feature_img.png"
               (three-way-qsort (filter #(> % pivot) xs)))))
 {% endhighlight clojure %}
 
-* 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧所以可以直接用一个set，即`#{pivot}`作为判断一个数是否与`pivot`相等的函数
+* 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧所以可以直接用一个set，即`#{pivot}`<br>
+　作为判断一个数是否与`pivot`相等的函数
 <br>
 <br>
 
 最后，可以给`qsort`函数再增加一个参数`pred`作为比较的函数，从而可以通过传入不同的`pred`来实现不同的排序方式。
 {% highlight clojure linenos %}
 ;; Quicksort
-(defn qsort [pred [pivot & xs]]
-  (when pivot
-    (lazy-cat (qsort pred (filter #(pred % pivot) xs))
+(defn qsort [pred]
+  (fn qsort-help [[pivot & xs]]
+    (when pivot
+    (lazy-cat (qsort-help (filter #(pred % pivot) xs))
               [pivot]
-              (qsort pred (remove #(pred % pivot) xs)))))
+              (qsort-help (remove #(pred % pivot) xs))))))
               
 ;; ascending order
 (def ascending-quicksort (qsort <))
 ;; descending order
 (def descending-quicksort (qsort >))
 {% endhighlight clojure %}
+
+(def coll [9 6 5 4 9 0 4 8 6 2])
+(ascending-quicksort coll)
+;=> (0 2 4 4 5 6 6 8 9 9)
+(descending-quicksort coll)
+;=> (9 9 8 6 6 5 4 4 2 0)
 
 好了，就这样，就这样水了一篇<(‾︶‾)>
 
