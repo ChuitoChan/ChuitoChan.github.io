@@ -53,6 +53,7 @@ feature-img: "img/sample_feature_img.png"
 {% endhighlight clojure %}
 
 * 这样写感觉有点逼格，但是呢，速度实在不如前面两种写法→_→
+<br>
 
 *Quicksort*有一种升级版叫*3-way-Quicksort*，它在序列中重复的数比较多时食用更佳哦！它的思想和普通*Quicksort*差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：<br>
 
@@ -88,7 +89,6 @@ feature-img: "img/sample_feature_img.png"
 (descending-quicksort coll)
 ;=> (9 9 8 6 6 5 4 4 2 0)
 {% endhighlight clojure %}
-<br>
 <br>
 
 也可以给`qsort`函数再增加一个参数`pred`作为比较的函数，当没有传入`pred`时，默认按升序排列。
