@@ -65,6 +65,7 @@ feature-img: "img/sample_feature_img.png"
 <br>
 <br>
 
+最后，可以给`qsort`函数再增加一个参数`pred`作为比较的函数，从而可以通过传入不同的`pred`来实现不同的排序方式。
 {% highlight clojure linenos %}
 ;; Quicksort
 (defn qsort [pred [pivot & xs]]
