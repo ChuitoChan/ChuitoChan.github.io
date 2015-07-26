@@ -70,7 +70,7 @@ feature-img: "img/sample_feature_img.png"
 <br>
 <br>
 
-最后，可以给`qsort`函数再增加一个参数`pred`作为比较的函数，从而可以通过先传入不同的`pred`来返回实现不同的排序方式。
+最后，可以将`qsort`定义为接收一个`pred`参数，返回一个以`pred`作为比较函数的`Quicksort`函数，从而实现不同的排序方式。
 {% highlight clojure linenos %}
 ;; Quicksort
 (defn qsort [pred]
@@ -90,7 +90,10 @@ feature-img: "img/sample_feature_img.png"
 (descending-quicksort coll)
 ;=> (9 9 8 6 6 5 4 4 2 0)
 {% endhighlight clojure %}
+<br>
+<br>
 
+也可以给`qsort`函数再增加一个参数`pred`作为比较的函数，当没有传入`pred`时，默认按升序排列。
 {% highlight clojure linenos %}
 ;; Quicksort
 (defn qsort
@@ -102,5 +105,5 @@ feature-img: "img/sample_feature_img.png"
                 (qsort pred (remove #(pred % pivot) xs))))))
 {% endhighlight clojure %}
 
-好了，就这样，就这样水了一篇<(‾︶‾)>
+好了，就这样，就这样水了一篇啦<(‾︶‾)>
 
