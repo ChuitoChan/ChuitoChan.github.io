@@ -8,7 +8,7 @@ feature-img: "img/sample_feature_img.png"
 
 *Quicksort* 的基本思路就是：
 
-1 在序列中找一个数作为基准（*pivot*）（暂时取第一个数吧）
+1 在序列中找一个数作为基准(*pivot*)（暂时取第一个数吧）
 2 对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）
 3 再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~
 
@@ -37,9 +37,10 @@ feature-img: "img/sample_feature_img.png"
               [pivot]
               (qsort (for [x xs :when (>= x pivot)] x)))))
 {% endhighlight clojure %}
+<br>
+<br>
 
-
-也可以用``quasiquote（`）``来拼接两个子序列：
+也可以用``quasiquote(`)``来拼接两个子序列：
 
 {% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
