@@ -16,7 +16,7 @@ Quicksort 的基本思路就是：
 
 
 
-{% highlight clojure %}
+{% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
   (when pivot
     (let [smaller? #(< % pivot)]
