@@ -8,13 +8,11 @@ feature-img: "img/sample_feature_img.png"
 
 *Quicksort* 的基本思路就是：
 
-* 在序列中找一个数作为基准（*pivot*）（暂时取第一个数吧）
-* 对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）
-* 再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~
+1 在序列中找一个数作为基准（*pivot*）（暂时取第一个数吧）
+2 对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）
+3 再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~
 
-在`Clojure`里面的函数`filter`和`remove`可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以*Quicksort*在`Clojure`里可以这样写：<br>
-
-
+在`Clojure`里面，函数`filter`和`remove`可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以*Quicksort*在`Clojure`里可以这样写：
 
 {% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
@@ -25,13 +23,10 @@ feature-img: "img/sample_feature_img.png"
                 (qsort (remove smaller? xs))))))
 {% endhighlight clojure %}
 
-`smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
-`lazy-cat`是用来惰性地拼接筛选出来的子序列
+* `smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
+* `lazy-cat`是用来惰性地拼接筛选出来的子序列
 
-同样也可以用`for`宏来实现`filter`和`remove`的功能：<br>
-
-
-
+同样也可以用`for`宏来实现`filter`和`remove`的功能：
 
 {% highlight clojure linenos %}
 (defn qsort [[pivot & xs]]
