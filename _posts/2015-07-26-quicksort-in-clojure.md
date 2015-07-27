@@ -67,7 +67,7 @@ feature-img: "img/sample_feature_img_2.png"
 {% endhighlight clojure %}
 
 * 在`Clojure`里面，`set`是可以当函数的哦！(๑•̀ㅂ•́)و✧<br>
-* 所以可以直接用一个set，即`#{pivot}`作为判断一个数是否与`pivot`相等的函数
+* 所以可以直接用一个`set`，即`#{pivot}`作为判断一个数是否与`pivot`相等的函数
 <br>
 <br>
 
