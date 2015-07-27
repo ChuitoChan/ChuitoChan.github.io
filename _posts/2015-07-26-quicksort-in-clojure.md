@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Quicksort in Clojure
+tag: Clojure
 feature-img: "img/sample_feature_img_2.png"
 ---
 
