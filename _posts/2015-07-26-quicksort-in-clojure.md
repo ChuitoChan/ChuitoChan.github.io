@@ -26,7 +26,7 @@ feature-img: "img/sample_feature_img_2.png"
 
 * `[[pivot & xs]]`对参数进行解构(destructuring)，即将序列的第一个数bind给*pivot*，<br> 
 　剩余部分bind给*xs*
-* `smaller?`是由`#(< % pivot)`定义的一个判断参数是否小于基准的函数
+* `smaller?`是由匿名函数`#(< % pivot)`定义的一个判断参数是否小于基准的函数
 * `lazy-cat`是用来惰性地拼接两个筛选出来并排好序的子序列
 <br>
 <br>
@@ -96,18 +96,18 @@ feature-img: "img/sample_feature_img_2.png"
 {% highlight clojure linenos %}
 ;; Quicksort
 (defn qsort
-  ([coll] (qsort < coll))
-  ([pred [pivot & xs]]
+  ([coll] (qsort coll <))
+  ([[pivot & xs] pred]
     (when pivot
-      (lazy-cat (qsort pred (filter #(pred % pivot) xs))
+      (lazy-cat (qsort (filter #(pred % pivot) xs) pred)
                 [pivot]
-                (qsort pred (remove #(pred % pivot) xs))))))
+                (qsort (remove #(pred % pivot) xs) pred)))))
                 
 ;; ascending order
 (qsort coll)
 ;=> (0 2 4 4 5 6 6 8 9 9)
 ;; descending order
-(qsort > coll)
+(qsort coll >)
 ;=> (9 9 8 6 6 5 4 4 2 0)
 {% endhighlight clojure %}
 <br>
