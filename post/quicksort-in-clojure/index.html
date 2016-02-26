@@ -1,0 +1,250 @@
+		<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<title>Quicksort in Clojure &middot; Chuito&#39;s</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-Frame-Options" content="sameorigin">
+	<meta name="author" content="Your name">
+	<meta name="description" content="(iterate play [Clojure ML AI])">
+	<meta name="generator" content="Hugo 0.15" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="http://chuitochan.github.io/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="http://chuitochan.github.io/favicon.ico" type="image/x-icon">
+
+	<!-- RSS -->
+	
+
+	<!-- Font Awesome -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- Google Fonts -->
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet" type="text/css">
+
+	
+	<script src="http://chuitochan.github.io/js/highlight.js"></script>
+	<link rel="stylesheet" href="http://chuitochan.github.io/css/arta.css">
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+		<body>
+			<header class="site-header">
+	<div class="branding">
+		<a href="http://chuitochan.github.io/">
+		
+			<img class="avatar" src="http://chuitochan.github.io/media/avatar.png" alt=""/>
+		
+		</a>
+		<h1 class="site-title">
+			<a href="http://chuitochan.github.io/">Chuito&#39;s</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+	      	
+
+	      	
+<li>
+	<a href="http://chuitochan.github.io/index.xml" title="">
+		<i class="fa fa-fw fa-rss"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/ChuitoChan" title="">
+		<i class="fa fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    </ul>
+	</nav>
+</header>
+			<div class="content">
+				
+				<article class="feature-image">
+					<header style="background-image: url('http://chuitochan.github.io/media/sample_feature_img.png')">
+						<h1 class="title">Quicksort in Clojure</h1>
+					</header>
+				
+
+				<section class="post-content">
+					<p>最近在学习<em>Robert Sedgewick</em> 老头子的《算法》红宝书，刚好看到<code>Sorting</code>那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算<em>Quicksort</em> 了。书里的算法都是用<code>Java</code>实现的，但是<code>Java</code>写多了，真的有点无聊（而且手累），所以我就尝试用<code>Clojure</code>来实现一下<em>Quicksort</em> 。</p>
+
+<p><em>Quicksort</em> 的基本思路就是：</p>
+
+<ol>
+<li>在序列中找一个数作为基准(<em>pivot</em> )（暂时取第一个数吧）</li>
+<li>对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到<br>
+　它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）</li>
+<li>再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~</li>
+</ol>
+
+<p>在<code>Clojure</code>里面，函数<code>filter</code>和<code>remove</code>可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以<em>Quicksort</em> 在<code>Clojure</code>里可以这样写：</p>
+
+<pre><code>(defn qsort [[pivot &amp; xs]]
+  (when pivot
+    (let [smaller? #(&lt; % pivot)]
+      (lazy-cat (qsort (filter smaller? xs))
+                [pivot]
+                (qsort (remove smaller? xs))))))
+</code></pre>
+
+<ul>
+<li><code>[[pivot &amp; xs]]</code>对参数进行解构(destructuring)，即将序列的第一个数bind给<em>pivot</em> ，<br>
+　剩余部分bind给<em>xs</em></li>
+<li><code>smaller?</code>是由匿名函数<code>#(&lt; % pivot)</code>定义的一个判断参数是否小于基准的函数</li>
+<li><code>lazy-cat</code>是用来惰性地拼接两个筛选出来并排好序的子序列
+<br></li>
+</ul>
+
+<p>同样也可以用<code>for</code>宏来实现<code>filter</code>和<code>remove</code>的功能：</p>
+
+<pre><code>(defn qsort [[pivot &amp; xs]]
+  (when pivot
+    (lazy-cat (qsort (for [x xs :when (&lt; x pivot)] x))
+              [pivot]
+              (qsort (for [x xs :when (&gt;= x pivot)] x)))))
+</code></pre>
+
+<p>也可以用<code>quasiquote(`)</code>来拼接两个子序列：</p>
+
+<pre><code>(defn qsort [[pivot &amp; xs]]
+  (when pivot
+    `(~@(qsort (filter #(&gt; % pivot) xs))
+      ~pivot
+      ~@(qsort (remove #(&gt; % pivot) xs)))))
+</code></pre>
+
+<ul>
+<li>这样写感觉有点逼格，但是呢，速度实在不如前面两种写法→_→
+<br></li>
+</ul>
+
+<p><em>Quicksort</em> 有一种升级版叫<em>3-way-Quicksort</em> ，它在序列中重复的数比较多时食用更佳哦！它的思想和普通<em>Quicksort</em> 差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：</p>
+
+<pre><code>(defn three-way-qsort [[pivot :as xs]]
+  (when pivot
+    (lazy-cat (three-way-qsort (filter #(&lt; % pivot) xs))
+              (filter #{pivot} xs)
+              (three-way-qsort (filter #(&gt; % pivot) xs)))))
+</code></pre>
+
+<ul>
+<li>在<code>Clojure</code>里面，<code>set</code>是可以当函数的哦！(๑•̀ㅂ•́)و✧<br></li>
+<li>所以可以直接用一个<code>set</code>，即<code>#{pivot}</code>作为判断一个数是否与<code>pivot</code>相等的函数
+<br></li>
+</ul>
+
+<p>最后，可以将<code>qsort</code>定义为接收一个<code>pred</code>参数，返回一个以<code>pred</code>作为比较函数的<code>Quicksort</code>函数，从而实现不同的排序方式。</p>
+
+<pre><code>;; Quicksort
+(defn qsort [pred]
+  (fn qsort-help [[pivot &amp; xs]]
+    (when pivot
+    (lazy-cat (qsort-help (filter #(pred % pivot) xs))
+              [pivot]
+              (qsort-help (remove #(pred % pivot) xs))))))
+              
+;; ascending order
+(def ascending-quicksort (qsort &lt;))
+;; descending order
+(def descending-quicksort (qsort &gt;))
+(def coll [9 6 5 4 9 0 4 8 6 2])
+(ascending-quicksort coll)
+;=&gt; (0 2 4 4 5 6 6 8 9 9)
+(descending-quicksort coll)
+;=&gt; (9 9 8 6 6 5 4 4 2 0)
+</code></pre>
+
+<p>也可以给<code>qsort</code>函数再增加一个参数<code>pred</code>作为比较的函数，当没有传入<code>pred</code>时，默认按升序排列。</p>
+
+<pre><code>;; Quicksort
+(defn qsort
+  ([coll] (qsort coll &lt;))
+  ([[pivot &amp; xs] pred]
+    (when pivot
+      (lazy-cat (qsort (filter #(pred % pivot) xs) pred)
+                [pivot]
+                (qsort (remove #(pred % pivot) xs) pred)))))
+                
+;; ascending order
+(qsort coll)
+;=&gt; (0 2 4 4 5 6 6 8 9 9)
+;; descending order
+(qsort coll &gt;)
+;=&gt; (9 9 8 6 6 5 4 4 2 0)
+</code></pre>
+
+<p><br></p>
+
+<p>好了，就这样，就这样水了一篇啦&lt;(‾︶‾)&gt;</p>
+
+
+				<hr>
+
+				<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'spf13';
+    var disqus_identifier = 'http:\/\/chuitochan.github.io\/post\/quicksort-in-clojure\/';
+    var disqus_title = 'Quicksort in Clojure';
+    var disqus_url = 'http:\/\/chuitochan.github.io\/post\/quicksort-in-clojure\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				</section>
+
+			</article>
+			<footer class="site-footer">
+	<p class="text">&copy; 2016 - Released under the MIT license<br>Powered by <a href="//gohugo.io/">Hugo</a> with the <a href="//github.com/digitalcraftsman/hugo-type-theme">Type Theme</a></p>
+</footer>
+
+
+		</div>
+	</body>
+</html>
