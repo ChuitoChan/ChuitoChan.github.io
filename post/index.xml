@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Chuito&#39;s code</title>
+    <title>Posts on Chuito&#39;s</title>
     <link>http://chuitochan.github.io/post/</link>
-    <description>Recent content in Posts on Chuito&#39;s code</description>
+    <description>Recent content in Posts on Chuito&#39;s</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Aug 2015 16:52:56 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 10 Aug 2015 23:34:50 +0800</lastBuildDate>
     <atom:link href="http://chuitochan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>2048 in Clojure</title>
       <link>http://chuitochan.github.io/post/2048-in-clojure/</link>
-      <pubDate>Mon, 10 Aug 2015 16:52:56 +0800</pubDate>
+      <pubDate>Mon, 10 Aug 2015 23:34:50 +0800</pubDate>
       
       <guid>http://chuitochan.github.io/post/2048-in-clojure/</guid>
       <description>
@@ -253,35 +253,11 @@ directions
 &lt;h4 id=&#34;格局评价:fbce43adeb5f9117deccb9fa41206555&#34;&gt;格局评价&lt;/h4&gt;
 
 &lt;p&gt;我并没有像大神那样采用那么多指标，而是采用我之前玩2048的思路。大家玩过都知道最方便合并的格局就是将最大那个数保持在角落，并且沿S形路线单调递减，也就是下面两个图那样（以左上角为例）。
-&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
 
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://chuitochan.github.io/media/2048_row.png&#34; alt=&#34;横向S形路线&#34; width=&#34;300&#34; /&gt;
-    
-    
-    &lt;figcaption&gt;
-        &lt;h4&gt;横向S形路线&lt;/h4&gt;
-        
-    &lt;/figcaption&gt;
-    
-&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&#34;http://chuitochan.github.io/media/2048_row.png&#34; alt=&#34;横向S形路线&#34; title=&#34;横向S形路线&#34; width=&#34;400&#34; /&gt;&lt;img src=&#34;http://chuitochan.github.io/media/2048_row.png&#34; alt=&#34;横向S形路线&#34; title=&#34;横向S形路线&#34; width=&#34;400&#34; /&gt;&lt;/p&gt;
 
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://chuitochan.github.io/media/2048_col.png&#34; width=&#34;300&#34; /&gt;
-    
-    
-    &lt;figcaption&gt;
-        &lt;h4&gt;纵向S形路线&lt;/h4&gt;
-        
-    &lt;/figcaption&gt;
-    
-&lt;/figure&gt;
-
-Example output
-&lt;br&gt;
-为了让格子随着S路线单调递减，将评价函数定义为S路线上的格子与一个等比数列（公比&lt;code&gt;0 &amp;lt; r &amp;lt; 1&lt;/code&gt;）的点乘。
+&lt;p&gt;为了让格子随着S路线单调递减，将评价函数定义为S路线上的格子与一个等比数列（公比&lt;code&gt;0&amp;lt;r&amp;lt;1&lt;/code&gt;）的点乘。
 &lt;br&gt;
             $$p&lt;em&gt;{n} \in Path&lt;/em&gt;{0&amp;hellip;7}$$，
 $$score = \sum&lt;em&gt;{n=0}^{7}value(p&lt;/em&gt;{n}) \times r^{n}$$&lt;/p&gt;
@@ -428,9 +404,9 @@ $$score = \sum&lt;em&gt;{n=0}^{7}value(p&lt;/em&gt;{n}) \times r^{n}$$&lt;/p&gt;
     </item>
     
     <item>
-      <title>Quicksort in clojure</title>
+      <title>Quicksort in Clojure</title>
       <link>http://chuitochan.github.io/post/quicksort-in-clojure/</link>
-      <pubDate>Sun, 26 Jul 2015 16:04:30 +0800</pubDate>
+      <pubDate>Sun, 26 Jul 2015 23:54:30 +0800</pubDate>
       
       <guid>http://chuitochan.github.io/post/quicksort-in-clojure/</guid>
       <description>&lt;p&gt;最近在学习&lt;em&gt;Robert Sedgewick&lt;/em&gt; 老头子的《算法》红宝书，刚好看到&lt;code&gt;Sorting&lt;/code&gt;那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算&lt;em&gt;Quicksort&lt;/em&gt; 了。书里的算法都是用&lt;code&gt;Java&lt;/code&gt;实现的，但是&lt;code&gt;Java&lt;/code&gt;写多了，真的有点无聊（而且手累），所以我就尝试用&lt;code&gt;Clojure&lt;/code&gt;来实现一下&lt;em&gt;Quicksort&lt;/em&gt; 。&lt;/p&gt;
@@ -547,9 +523,9 @@ $$score = \sum&lt;em&gt;{n=0}^{7}value(p&lt;/em&gt;{n}) \times r^{n}$$&lt;/p&gt;
     </item>
     
     <item>
-      <title>Hello World!</title>
+      <title>hello world</title>
       <link>http://chuitochan.github.io/post/hello-world/</link>
-      <pubDate>Sun, 26 Jul 2015 15:46:30 +0800</pubDate>
+      <pubDate>Sun, 26 Jul 2015 23:24:52 +0800</pubDate>
       
       <guid>http://chuitochan.github.io/post/hello-world/</guid>
       <description>&lt;p&gt;好久好久好久之前就想搞个Blog玩玩，但是现实向来是残酷的嘛。。。经历各种艰辛之后呢，我的Blog终于诞生啦！！！(其实是因为我懒。。。)&lt;br&gt;&lt;/p&gt;

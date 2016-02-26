@@ -1,60 +1,114 @@
-	<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+		<!DOCTYPE html>
+<html lang="en-us">
 <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.15" />
+	<title>Quicksort in Clojure &middot; Chuito&#39;s</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-Frame-Options" content="sameorigin">
+	<meta name="author" content="Your name">
+	<meta name="description" content="(iterate play [Clojure ML AI])">
+	<meta name="generator" content="Hugo 0.15" />
 
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<!-- CSS -->
+	<link rel="stylesheet" href="http://chuitochan.github.io/css/main.css">
 
-  <title> Quicksort in clojure &middot; Chuito&#39;s code </title>
+	<!--Favicon-->
+	<link rel="shortcut icon" href="http://chuitochan.github.io/favicon.ico" type="image/x-icon">
 
-  
-  <link rel="stylesheet" href="http://chuitochan.github.io/css/poole.css">
-  <link rel="stylesheet" href="http://chuitochan.github.io/css/syntax.css">
-  <link rel="stylesheet" href="http://chuitochan.github.io/css/hyde.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+	<!-- RSS -->
+	
 
-  
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/favicon.png">
+	<!-- Font Awesome -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="Chuito&#39;s code" />
-  
-  
-  <script src="http://chuitochan.github.io/js/highlight.js"></script>
-  <link rel="stylesheet" href="http://chuitochan.github.io/css/arta.css">
-  <script>hljs.initHighlightingOnLoad();</script>
+	<!-- Google Fonts -->
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet" type="text/css">
+
+	
+	<script src="http://chuitochan.github.io/js/highlight.js"></script>
+	<link rel="stylesheet" href="http://chuitochan.github.io/css/arta.css">
+	<script>hljs.initHighlightingOnLoad();</script>
 </head>
+		<body>
+			<header class="site-header">
+	<div class="branding">
+		<a href="http://chuitochan.github.io/">
+		
+			<img class="avatar" src="http://chuitochan.github.io/media/avatar.png" alt=""/>
+		
+		</a>
+		<h1 class="site-title">
+			<a href="http://chuitochan.github.io/">Chuito&#39;s</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+	      	
+
+	      	
+<li>
+	<a href="http://chuitochan.github.io/index.xml" title="">
+		<i class="fa fa-fw fa-rss"></i>
+	</a>
+</li>
 
 
-	<body class="theme-base-0d">
-		<div class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <a href="http://chuitochan.github.io/"><h1>Chuito&#39;s code</h1></a>
-      <p class="lead">
-       (iterate play [Clojure ML AI]) 
-      </p>
-    </div>
-
-    <ul class="sidebar-nav">
-      <li><a href="/">Home</a> </li>
-      
-    </ul>
-
-    <p>&copy; 2016. All rights reserved. </p>
-  </div>
-</div>
 
 
-		<div class="content container">
-			<div class="post">
-			 	<h1>Quicksort in clojure</h1>
-			  <span class="post-date">Sun, Jul 26, 2015</span>
-			      <p>最近在学习<em>Robert Sedgewick</em> 老头子的《算法》红宝书，刚好看到<code>Sorting</code>那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算<em>Quicksort</em> 了。书里的算法都是用<code>Java</code>实现的，但是<code>Java</code>写多了，真的有点无聊（而且手累），所以我就尝试用<code>Clojure</code>来实现一下<em>Quicksort</em> 。</p>
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/ChuitoChan" title="">
+		<i class="fa fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    </ul>
+	</nav>
+</header>
+			<div class="content">
+				
+				<article class="feature-image">
+					<header style="background-image: url('http://chuitochan.github.io/media/sample_feature_img.png')">
+						<h1 class="title">Quicksort in Clojure</h1>
+					</header>
+				
+
+				<section class="post-content">
+					<p>最近在学习<em>Robert Sedgewick</em> 老头子的《算法》红宝书，刚好看到<code>Sorting</code>那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算<em>Quicksort</em> 了。书里的算法都是用<code>Java</code>实现的，但是<code>Java</code>写多了，真的有点无聊（而且手累），所以我就尝试用<code>Clojure</code>来实现一下<em>Quicksort</em> 。</p>
 
 <p><em>Quicksort</em> 的基本思路就是：</p>
 
@@ -165,10 +219,32 @@
 
 <p>好了，就这样，就这样水了一篇啦&lt;(‾︶‾)&gt;</p>
 
-			</div>
 
-			
+				<hr>
+
+				<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'spf13';
+    var disqus_identifier = 'http:\/\/chuitochan.github.io\/post\/quicksort-in-clojure\/';
+    var disqus_title = 'Quicksort in Clojure';
+    var disqus_url = 'http:\/\/chuitochan.github.io\/post\/quicksort-in-clojure\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				</section>
+
+			</article>
+			<footer class="site-footer">
+	<p class="text">&copy; 2016 - Released under the MIT license<br>Powered by <a href="//gohugo.io/">Hugo</a> with the <a href="//github.com/digitalcraftsman/hugo-type-theme">Type Theme</a></p>
+</footer>
+
+
 		</div>
-
-  </body>
+	</body>
 </html>

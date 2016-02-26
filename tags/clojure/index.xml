@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clojure on Chuito&#39;s</title>
+    <link>http://chuitochan.github.io/tags/clojure/</link>
+    <description>Recent content in Clojure on Chuito&#39;s</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 26 Jul 2015 23:54:30 +0800</lastBuildDate>
+    <atom:link href="http://chuitochan.github.io/tags/clojure/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Quicksort in Clojure</title>
+      <link>http://chuitochan.github.io/post/quicksort-in-clojure/</link>
+      <pubDate>Sun, 26 Jul 2015 23:54:30 +0800</pubDate>
+      
+      <guid>http://chuitochan.github.io/post/quicksort-in-clojure/</guid>
+      <description>&lt;p&gt;最近在学习&lt;em&gt;Robert Sedgewick&lt;/em&gt; 老头子的《算法》红宝书，刚好看到&lt;code&gt;Sorting&lt;/code&gt;那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算&lt;em&gt;Quicksort&lt;/em&gt; 了。书里的算法都是用&lt;code&gt;Java&lt;/code&gt;实现的，但是&lt;code&gt;Java&lt;/code&gt;写多了，真的有点无聊（而且手累），所以我就尝试用&lt;code&gt;Clojure&lt;/code&gt;来实现一下&lt;em&gt;Quicksort&lt;/em&gt; 。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Quicksort&lt;/em&gt; 的基本思路就是：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;在序列中找一个数作为基准(&lt;em&gt;pivot&lt;/em&gt; )（暂时取第一个数吧）&lt;/li&gt;
+&lt;li&gt;对序列进行分区操作，将比这个基准大的数都放到它的右边，将小于或等于它的数都放到&lt;br&gt;
+　它的左边（这个过程实际上就已经将作为基准的数放到了其排序后的正确位置）&lt;/li&gt;
+&lt;li&gt;再对左右区间重复上一步，直到各区只有一个数，这样整个序列就排好啰~~~&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在&lt;code&gt;Clojure&lt;/code&gt;里面，函数&lt;code&gt;filter&lt;/code&gt;和&lt;code&gt;remove&lt;/code&gt;可以用来筛选出一个序列里面我们想要的数（大于基准的数和不大于基准的数）。所以&lt;em&gt;Quicksort&lt;/em&gt; 在&lt;code&gt;Clojure&lt;/code&gt;里可以这样写：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn qsort [[pivot &amp;amp; xs]]
+  (when pivot
+    (let [smaller? #(&amp;lt; % pivot)]
+      (lazy-cat (qsort (filter smaller? xs))
+                [pivot]
+                (qsort (remove smaller? xs))))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[[pivot &amp;amp; xs]]&lt;/code&gt;对参数进行解构(destructuring)，即将序列的第一个数bind给&lt;em&gt;pivot&lt;/em&gt; ，&lt;br&gt;
+　剩余部分bind给&lt;em&gt;xs&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;smaller?&lt;/code&gt;是由匿名函数&lt;code&gt;#(&amp;lt; % pivot)&lt;/code&gt;定义的一个判断参数是否小于基准的函数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lazy-cat&lt;/code&gt;是用来惰性地拼接两个筛选出来并排好序的子序列
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;同样也可以用&lt;code&gt;for&lt;/code&gt;宏来实现&lt;code&gt;filter&lt;/code&gt;和&lt;code&gt;remove&lt;/code&gt;的功能：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn qsort [[pivot &amp;amp; xs]]
+  (when pivot
+    (lazy-cat (qsort (for [x xs :when (&amp;lt; x pivot)] x))
+              [pivot]
+              (qsort (for [x xs :when (&amp;gt;= x pivot)] x)))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也可以用&lt;code&gt;quasiquote(`)&lt;/code&gt;来拼接两个子序列：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn qsort [[pivot &amp;amp; xs]]
+  (when pivot
+    `(~@(qsort (filter #(&amp;gt; % pivot) xs))
+      ~pivot
+      ~@(qsort (remove #(&amp;gt; % pivot) xs)))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;这样写感觉有点逼格，但是呢，速度实在不如前面两种写法→_→
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Quicksort&lt;/em&gt; 有一种升级版叫&lt;em&gt;3-way-Quicksort&lt;/em&gt; ，它在序列中重复的数比较多时食用更佳哦！它的思想和普通&lt;em&gt;Quicksort&lt;/em&gt; 差不多，只是它分区的时候不止分左右两个区，而是同时筛选出与基准相等的数，并放在中间，这样就可以一次过将所有与基准相等的数放到它们排序后的正确位置，而不是每次只能排好一个数。接下来就是用同样的方法递归地去排列左右两个区啦。实现起来也很简单，只需在原来的基础上加多一行代码来筛选出与基准相等的数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn three-way-qsort [[pivot :as xs]]
+  (when pivot
+    (lazy-cat (three-way-qsort (filter #(&amp;lt; % pivot) xs))
+              (filter #{pivot} xs)
+              (three-way-qsort (filter #(&amp;gt; % pivot) xs)))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在&lt;code&gt;Clojure&lt;/code&gt;里面，&lt;code&gt;set&lt;/code&gt;是可以当函数的哦！(๑•̀ㅂ•́)و✧&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;所以可以直接用一个&lt;code&gt;set&lt;/code&gt;，即&lt;code&gt;#{pivot}&lt;/code&gt;作为判断一个数是否与&lt;code&gt;pivot&lt;/code&gt;相等的函数
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最后，可以将&lt;code&gt;qsort&lt;/code&gt;定义为接收一个&lt;code&gt;pred&lt;/code&gt;参数，返回一个以&lt;code&gt;pred&lt;/code&gt;作为比较函数的&lt;code&gt;Quicksort&lt;/code&gt;函数，从而实现不同的排序方式。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Quicksort
+(defn qsort [pred]
+  (fn qsort-help [[pivot &amp;amp; xs]]
+    (when pivot
+    (lazy-cat (qsort-help (filter #(pred % pivot) xs))
+              [pivot]
+              (qsort-help (remove #(pred % pivot) xs))))))
+              
+;; ascending order
+(def ascending-quicksort (qsort &amp;lt;))
+;; descending order
+(def descending-quicksort (qsort &amp;gt;))
+(def coll [9 6 5 4 9 0 4 8 6 2])
+(ascending-quicksort coll)
+;=&amp;gt; (0 2 4 4 5 6 6 8 9 9)
+(descending-quicksort coll)
+;=&amp;gt; (9 9 8 6 6 5 4 4 2 0)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也可以给&lt;code&gt;qsort&lt;/code&gt;函数再增加一个参数&lt;code&gt;pred&lt;/code&gt;作为比较的函数，当没有传入&lt;code&gt;pred&lt;/code&gt;时，默认按升序排列。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Quicksort
+(defn qsort
+  ([coll] (qsort coll &amp;lt;))
+  ([[pivot &amp;amp; xs] pred]
+    (when pivot
+      (lazy-cat (qsort (filter #(pred % pivot) xs) pred)
+                [pivot]
+                (qsort (remove #(pred % pivot) xs) pred)))))
+                
+;; ascending order
+(qsort coll)
+;=&amp;gt; (0 2 4 4 5 6 6 8 9 9)
+;; descending order
+(qsort coll &amp;gt;)
+;=&amp;gt; (9 9 8 6 6 5 4 4 2 0)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;好了，就这样，就这样水了一篇啦&amp;lt;(‾︶‾)&amp;gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
