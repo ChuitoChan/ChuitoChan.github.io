@@ -12,7 +12,7 @@ theme:
 
   # Header and footer text
   header_text: >
-     <p>(reduce play programming)</p>
+     <p>(iterate play [Clojure ML AI])</p>
 
      
   header_text_feature_image:
