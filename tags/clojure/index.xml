@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Clojure on Chuito&#39;s fairyland</title>
-    <link>http://chuitochan.github.io/tags/clojure/</link>
+    <link>https://chuitochan.github.io/tags/clojure/</link>
     <description>Recent content in Clojure on Chuito&#39;s fairyland</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 26 Jul 2015 23:54:30 +0800</lastBuildDate>
-    <atom:link href="http://chuitochan.github.io/tags/clojure/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://chuitochan.github.io/tags/clojure/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Quicksort in Clojure</title>
-      <link>http://chuitochan.github.io/post/quicksort-in-clojure/</link>
+      <link>https://chuitochan.github.io/post/quicksort-in-clojure/</link>
       <pubDate>Sun, 26 Jul 2015 23:54:30 +0800</pubDate>
       
-      <guid>http://chuitochan.github.io/post/quicksort-in-clojure/</guid>
+      <guid>https://chuitochan.github.io/post/quicksort-in-clojure/</guid>
       <description>&lt;p&gt;最近在学习&lt;em&gt;Robert Sedgewick&lt;/em&gt; 老头子的《算法》红宝书，刚好看到&lt;code&gt;Sorting&lt;/code&gt;那一部分。各种有趣的排序算法，真是大开眼界，其中最NB的要算&lt;em&gt;Quicksort&lt;/em&gt; 了。书里的算法都是用&lt;code&gt;Java&lt;/code&gt;实现的，但是&lt;code&gt;Java&lt;/code&gt;写多了，真的有点无聊（而且手累），所以我就尝试用&lt;code&gt;Clojure&lt;/code&gt;来实现一下&lt;em&gt;Quicksort&lt;/em&gt; 。&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Quicksort&lt;/em&gt; 的基本思路就是：&lt;/p&gt;
