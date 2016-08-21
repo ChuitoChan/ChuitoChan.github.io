@@ -1,0 +1,525 @@
+		<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<title>2048 in Clojure &middot; Chuito&#39;s fairyland</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-Frame-Options" content="sameorigin">
+	<meta name="author" content="Your name">
+	<meta name="description" content="(iterate play [Clojure ML NLP AI])">
+	<meta name="generator" content="Hugo 0.15" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://chuitochan.github.io/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="https://chuitochan.github.io/favicon.ico" type="image/x-icon">
+
+	<!-- RSS -->
+	
+
+	<!-- Font Awesome -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- Google Fonts -->
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet" type="text/css">
+
+	
+	<script src="https://chuitochan.github.io/js/highlight.js"></script>
+	<link rel="stylesheet" href="https://chuitochan.github.io/css/arta.css">
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+		<body>
+			<header class="site-header">
+	<div class="branding">
+		<a href="https://chuitochan.github.io/">
+		
+			<img class="avatar" src="https://chuitochan.github.io/media/avatar.png" alt=""/>
+		
+		</a>
+		<h1 class="site-title">
+			<a href="https://chuitochan.github.io/">Chuito&#39;s fairyland</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+	      	
+
+	      	
+<li>
+	<a href="https://chuitochan.github.io/index.xml" title="Subcribe">
+		<i class="fa fa-fw fa-rss"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/ChuitoChan" title="Github">
+		<i class="fa fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    </ul>
+	</nav>
+</header>
+			<div class="content">
+				
+				<article class="feature-image">
+					<header style="background-image: url('https://chuitochan.github.io/media/headerimage.jpg')">
+						<h1 class="title">2048 in Clojure</h1>
+					</header>
+				
+
+				<section class="post-content">
+					
+
+<p>上一篇博文好像水过头了，这次得来点认真的了——用<code>Clojure</code>写个<a href="http://gabrielecirulli.github.io/2048/">2048</a>小游戏。由于是用<code>Clojure</code>写的，相对于其他语言的各种<code>for</code>、<code>while</code>，可能会有点不同哦！</p>
+
+<p>不多说废话，开始吧~~~~~~~~~~~~~~~~~~~
+<br>
+<br>
+首先用<code>vector</code>定义一个空面板（用0表示空格子）：</p>
+
+<pre><code>(def blank-board
+  (vec (repeat 4 (vec (repeat 4 0)))))
+ 
+blank-board
+;=&gt; [[0 0 0 0] [0 0 0 0] [0 0 0 0] [0 0 0 0]]
+</code></pre>
+
+<p>然后用<code>sorted-map</code>定义一下划动的方向，不同方向对应不同的值：</p>
+
+<pre><code>(def directions (sorted-map :left 0 :down 1 :right 2 :up 3))
+directions
+;=&gt; {:down 1, :left 0, :right 2, :up 3}
+</code></pre>
+
+<h4 id="填格子:fbce43adeb5f9117deccb9fa41206555">填格子：</h4>
+
+<p>1.找出所有空着的格子</p>
+
+<pre><code>(defn blanks [board]
+  (for [x (range 4)
+        y (range 4)
+        :when (zero? (get-in board [x y]))]
+    [x y]))
+
+(blanks [[2 4 4 8] [8 16 0 8] [2 2 4 2] [0 2 4 4]])
+;=&gt; ([1 2] [3 0])
+</code></pre>
+
+<p>2.随机给一个空格子填入2或4（概率分别为P(2)=0.9，P(4)=0.1）:</p>
+
+<pre><code>(defn add-tile [board]
+  (let [elem (rand-nth [2 2 2 2 4 2 2 2 2 2])
+        pos  (rand-nth (blanks board))]
+    (assoc-in board pos elem)))
+</code></pre>
+
+<p>将面板打印出来，并且返回面板：</p>
+
+<pre><code>(defn print-board [board]
+  (do
+    (doseq [x (range 4)]
+      (doseq [y (range 4)]
+        (printf &quot;%8d&quot; (get-in board [x y])))
+      (println))
+    (println &quot;--------------------------------&quot;)
+    board))
+
+(print-board (add-tile blank-board))
+;=&gt;        0       0       0       0
+;=&gt;        0       0       0       0
+;=&gt;        0       2       0       0
+;=&gt;        0       0       0       0
+;=&gt; --------------------------------
+;=&gt; [[0 0 0 0] [0 0 0 0] [0 2 0 0] [0 0 0 0]]
+</code></pre>
+
+<h4 id="划动:fbce43adeb5f9117deccb9fa41206555">划动</h4>
+
+<p>1.先考虑一行里格子的碰撞合并，思路是先去掉空格子，再将相邻值相等的格子分在一块，再将每个格子块分割成两个一组，最后将每组的数（两个或一个）分别加起来：</p>
+
+<pre><code>(defn add-pairs [row]
+  (-&gt;&gt; row
+       (remove zero?)
+       (partition-by identity)
+       (mapcat #(partition-all 2 %))
+       (map #(apply + %))))
+</code></pre>
+
+<p>2.补充空格子：</p>
+
+<pre><code>(defn padding [row]
+  (take 4 (concat row (repeat 0))))
+  
+(padding (add-pairs [4 4 0 8]))
+;=&gt; (8 8 0 0)
+</code></pre>
+
+<p>3.上面两个操作针对的是左划，那么其他方向的划动怎么实现呢？这个有点巧妙：譬如我们要向下划动，我们可以先将面板顺时针旋转<code>90°</code>，这样方向向下的列就变成方向向左的行，然后就可以用上面的<code>add-pairs</code>和<code>padding</code>对每一行进行处理，处理完之后再逆时针旋转回来就是了（实际是顺时针转多<code>270°</code>）。所以前面<code>directions</code>里面划动方向对应的值其实就是它要顺时针旋转原面板90度的次数。这样剩下的问题就是怎么实现旋转一个面板了，这也很简单：先将原面板的行颠倒一下顺序，然后对面板转置，就能得到旋转后的面板。</p>
+
+<pre><code>(defn rotate [board]
+  (apply mapv vector (reverse board)))
+
+(defn rotate-board [n board]
+  (nth (iterate rotate board) n))
+
+(print-board [[0 1 2 3] [4 5 6 7] [8 9 10 11] [12 13 14 15]])
+;=&gt;        0       1       2       3
+;=&gt;        4       5       6       7
+;=&gt;        8       9      10      11
+;=&gt;       12      13      14      15
+;=&gt; --------------------------------
+(print-board (rotate [[0 1 2 3] [4 5 6 7] [8 9 10 11] [12 13 14 15]]))
+;=&gt;       12       8       4       0
+;=&gt;       13       9       5       1
+;=&gt;       14      10       6       2
+;=&gt;       15      11       7       3
+;=&gt; --------------------------------
+</code></pre>
+
+<p>4.最后定义一个<code>move</code>实现整个划动操作：</p>
+
+<pre><code>(defn move [board dir]
+  (-&gt;&gt; board
+       (rotate-board (directions dir))
+       (map add-pairs)
+       (map padding)
+       (rotate-board (- 4 (directions dir)))))
+
+(def board [[2 4 4 8] [8 16 0 8] [2 2 4 2] [0 2 4 4]])
+(print-board board)
+;=&gt;       2       4       4       8
+;=&gt;       8      16       0       8
+;=&gt;       2       2       4       2
+;=&gt;       0       2       4       4
+;=&gt; --------------------------------
+(print-board (move board :right))
+;=&gt;        0       2       8       8
+;=&gt;        0       8      16       8
+;=&gt;        0       4       4       2
+;=&gt;        0       0       2       8
+;=&gt; --------------------------------
+</code></pre>
+
+<h4 id="游戏控制:fbce43adeb5f9117deccb9fa41206555">游戏控制</h4>
+
+<p>1.初始化：</p>
+
+<pre><code>(defn init-game []
+  (-&gt; blank-board
+      add-tile
+      add-tile))
+</code></pre>
+
+<p>2.判断是否game over（也就是哪个方向都动不了）：</p>
+
+<pre><code>(defn noop? [board dir]
+  (= board (move board dir)))
+  
+(defn gameover? [board]
+  (every? (partial noop? board) (keys directions)))
+  
+(gameover? [[2 4 8 16] [16 8 4 2] [2 4 8 16] [16 8 4 2]])
+;=&gt; true
+(gameover? [[2 2 8 16] [16 8 4 2] [2 4 8 16] [16 8 4 2]])
+;=&gt; false
+</code></pre>
+
+<p>3.一轮操作的过程：如果划动之后的面板和原来一样，则不填入新的格子：</p>
+
+<pre><code>(defn play [board dir]
+  (-&gt; board
+      (move dir)
+      (as-&gt; new-board
+            (if (= board new-board)
+              new-board
+              (add-tile new-board)))))
+</code></pre>
+
+<p>4.整个游戏的运行：定义一个<code>auto-play</code>函数接收2个参数：原面板<code>board</code>和函数<code>player</code>，先用<code>player</code>根据原面板返回一个划动方向<code>dir</code>（并且将它显示出来），进行一轮游戏，产生新面板<code>res</code>，将新面板打印出来，如果游戏没有结束，就用新面板尾递归回去</p>
+
+<pre><code>(defn auto-play [board player]
+  (let [dir (player board)
+        _   (prn dir)
+        res (play board dir)]
+    (print-board res)
+    (if (gameover? res)
+      (println &quot;Game over!&quot;)
+      (recur res player))))
+</code></pre>
+
+<p>这样，基本上一个2048的游戏核心就出来啦！！！撒花，撒花~~~~~<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br></p>
+
+<p>以为这样就结束了吗？呵呵！滚动条还有一半呢，请放心食用！！！
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br></p>
+
+<p>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-我是不要脸的分割线&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+<br>
+<br>
+光写个游戏出来太简单了，感觉还不够好玩，身为一名技术宅，不仅能写游戏，还得会玩游戏，不好意思，俺要开个挂~~~~~~~~~~~~~~~~
+<br>
+虽然我之前玩2048经常傻逼，但是我可以写个没那么逗逼的小<code>AI</code>帮我去玩啊！于是我就决定写个2048小AI（给自己挖个坑）。︿(￣︶￣)︿
+<br>
+然后就找到了这篇<a href="http://blog.codinglabs.org/articles/2048-ai-analysis.html">2048-AI算法分析</a>，学了下如何用<a href="https://en.wikipedia.org/wiki/Minimax">Minimax</a>（也就是极小化极大算法）和<a href="https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">Alpha-beta剪枝</a>实现2048-AI。还发现了<code>stackoverflow</code>上两位大神关于<a href="http://stackoverflow.com/questions/22342854/what-is-the-optimal-algorithm-for-the-game-2048">What is the optimal algorithm for the game 2048?</a>的回答。然后我就去找两位大神的源码来研究研究。<a href="https://github.com/ov3y/2048-AI">ovolve</a>大神的AI是基于<a href="https://en.wikipedia.org/wiki/Minimax">Minimax</a>和<a href="https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">Alpha-beta剪枝</a>算法用<code>javascript</code>实现的，而<a href="https://github.com/nneonneo/2048-ai">nneonneo</a>大神的AI是基于<a href="https://en.wikipedia.org/wiki/Expectiminimax_tree">Expectimax</a>算法用<code>C++</code>实现的。但是这种两种语言我都没学过啊，只能根据代码去大概揣测真正的意图。但是大神就是大神，各种高级的编程技巧，岂是我这渣渣所能领悟的呢？重要的是我还得转化成<code>Clojure</code>来实现呀，各种蛋疼有木有ლ(°Д°ლ)
+<br>
+大神们关于启发函数考虑了不少评判因素，比如空格子的个数，单调性，平整度，最大值等等。但是我只是个初学编程的战五渣呀，不要求像<code>nneonneo</code>大神那样<code>100%</code>能达到<code>8192</code>，只要有较大机率获得<code>2048</code>就心满意足了( ´•︵•` )。 所以。。。我就没有用大神的启发函数。
+<br>
+<br></p>
+
+<h4 id="建模:fbce43adeb5f9117deccb9fa41206555">建模</h4>
+
+<p>这里引用<a href="http://blog.codinglabs.org/articles/2048-ai-analysis.html">2048-AI算法分析</a>的：</p>
+
+<ul>
+<li>我方：游戏玩家。每次可以选择上、下、左、右四个行棋策略中的一种（某些格局会少于四种，因为有些方向不可走）行棋后方块按照既定逻辑移动及合并，格局转换完成。</li>
+<li>对方：计算机。在当前任意空格子里放置一个方块，方块的数值可以是2或4。放置新方块后，格局转换完成。</li>
+<li>胜利条件：出现某个方块的数值为“2048”。</li>
+<li>失败条件：格子全满，且无法向四个方向中任何一个方向移动（均不能触发合并）。</li>
+</ul>
+
+<h4 id="格局评价:fbce43adeb5f9117deccb9fa41206555">格局评价</h4>
+
+<p>我并没有像大神那样采用那么多指标，而是采用我之前玩2048的思路。大家玩过都知道最方便合并的格局就是将最大那个数保持在角落，并且沿S形路线单调递减，也就是下面两个图那样（以左上角为例）。
+<br></p>
+
+<p><img src="/media/2048_row.png" alt="横向S形路线" title="横向S形路线" width="400" /><img src="/media/2048_row.png" alt="横向S形路线" title="横向S形路线" width="400" /></p>
+
+<p>为了让格子随着S路线单调递减，将评价函数定义为S路线上的格子与一个等比数列（公比<code>0&lt;r&lt;1</code>）的点乘。
+<br>
+            $$p<em>{n} \in Path</em>{0&hellip;7}$$，
+$$score = \sum<em>{n=0}^{7}value(p</em>{n}) \times r^{n}$$</p>
+
+<p>在电脑回合，由于电脑填入格子后，评价函数的值肯定是增加的，因此这个时候的评价会有所不同。回想玩游戏时候的情况，最蛋疼的应该是在那条单调递减路线中间被电脑突然强插了一个“2”，破坏了整体的单调性。所以我将电脑回合的操作统一定为在评价分数最高的那条路线上找到最靠前的空格子并且插入一个“2”。这样做还省去了不少电脑回合对评价函数的计算。
+<br>
+在玩家回合，我并没有像<code>Minimax</code>那样，搜索树的节点取其子节点的最大值。因为实际运行过程中，我发现会有<code>过度悲观</code>的问题。当我们处于较好的格局时，经过几次假设的最坏情况后，那些一开始有利于维持良好格局的方向形成的叶子，可能会不如那些一开始就破坏良好格局的方向形成的叶子，因此如果只考虑搜索树的叶子的最大值的话就会得出最优方案是那些一开始会破坏良好格局的方向。但是不同于真正的博弈，电脑对空格子的填入并不是理性的，而是随机的，连续发生几次最坏情况的机率是很低的。为了避免那发生机率很低的最最最坏情况而打破原来的良好格局，是很不划算的。所以我在决定那个方向是最优方向时，考虑的是整个搜索的态势，叶子的启发函数得分就是其评价分数，而节点的启发函数得分则是其子节点的最大启发函数得分乘以一定比值<code>h</code>（<code>h&gt;1</code>，因为最坏情况下得到的高分更有价值）再加上该节点本身的评价分数。因此最后4个方向得到的分数是从各自方向向下搜索的每层加起来的总体反映。而且搜索到的层数越多，得分越高。</p>
+
+<h4 id="实现:fbce43adeb5f9117deccb9fa41206555">实现</h4>
+
+<p>1.先定义等比数列，以0.25为公比：</p>
+
+<pre><code>(def coefs (take 16 (iterate #(* 0.25 %) 1)))
+</code></pre>
+
+<p>2.对面板上每个格子将其值和坐标保存到一个map里面</p>
+
+<pre><code>(defn val-pos [board]
+  (for [row (range 4)]
+    (for [col (range 4)]
+      {:value (get-in board [row col]) :pos [row col]})))
+</code></pre>
+
+<p>3.以左上角为例，定义<code>row-path</code>和<code>col-path</code>分别求横向和纵向的S形路线。其他边角的S形路线可利用之前定义<code>rotate</code>函数先旋转面板，再用<code>row-path</code>和<code>col-path</code>求得</p>
+
+<pre><code>(defn row-path [board]
+  (concat (first board) (reverse (second board))
+          (last (butlast board)) (reverse (last board))))
+
+(defn col-path [board]
+  (let [rev-board (apply mapv vector board)]
+    (row-path rev-board)))
+</code></pre>
+
+<p>4.求最高评价分数与待填空格子（也就是影响单调性最大的格子）的坐标</p>
+
+<pre><code>(defn calculate [path]
+  (reduce + (map * (map :value path) coefs)))
+
+(defn critical-blank [path]
+  (:pos (first (filter (comp zero? :value) path))))
+  
+(defn evaluate [board]
+  (let [v-p-board (val-pos board)
+        boards    (take 4 (iterate rotate v-p-board))
+        paths     (concat (map row-path boards) (map col-path boards))
+        best-path (last (sort-by calculate paths))]
+    {:score (calculate best-path) :pos (critical-blank best-path)}))
+    
+(evaluate [[2 0 8 16] [0 0 0 0] [0 0 0 0] [0 0 0 0]])
+;=&gt; {:score 18.03125, :pos [0 1]}
+</code></pre>
+
+<ul>
+<li><code>calculate</code>计算一条路线的评价分数</li>
+<li><code>critical-blank</code>找出路径上最靠前的空格子的坐标</li>
+<li><code>evaluate</code>找出面板中评价分数最高的那一条路线，并返回该路线关于评价分数和待填入空格子坐标的map</li>
+</ul>
+
+<p>5.接下来是最长，最复杂的一个函数——<code>next-move</code>，用来决定下一步的划动方向。它接收3个参数：原面板<code>board</code>、当前搜索深度<code>depth</code>和最大搜索深度<code>max-depth</code>，返回一个关于最优划动方向，该划动方向的分数和划动该方向后对单调性影响最大的空格子坐标的map。</p>
+
+<pre><code>(defn next-move [board depth max-depth]
+  (let [dirs (remove #(noop? board %) (keys directions))]
+    (if (empty? dirs)
+      {:dir :left :score 0 :pos [0 0]}
+      (if (zero? depth)
+        (-&gt;&gt; dirs
+             (map #(move board %))
+             (map evaluate)
+             (map #(assoc %2 :dir %1) dirs)
+             (sort-by :score)
+             last)
+        (let [boards     (map #(move board %) dirs)
+              scores-pos (map evaluate boards)
+              scores     (map :score scores-pos)
+              pos        (map :pos scores-pos)
+              new-boards (map #(assoc-in %1 %2 2) boards pos)]
+          (-&gt;&gt; new-boards
+               (map #(next-move % (dec depth) max-depth))
+               (map #(+ %1 (* (:score %2) 
+                              (Math/pow 1.1 (+ (- max-depth depth) 1))))
+                    scores)
+               (map #(hash-map :pos %1 :score %2) pos)
+               (map #(assoc %2 :dir %1) dirs)
+               (sort-by :score)
+               last))))))
+               
+(next-move [[2 0 8 16] [0 0 0 0] [0 0 0 0] [0 0 0 0]] 3 3)
+;=&gt; {:dir :right, :pos [0 0], :score 97.93813777070267}
+</code></pre>
+
+<ul>
+<li>先获取有效的划动方向</li>
+<li>如果没有有效的划动方向，则默认返回分数为0,划动方向向左，空格子坐标为[0 0]（划动方向和格子坐标并不重要）</li>
+<li>如果搜索深度为0，则对原面板分别进行每个有效的划动操作，计算对应的分数和影响单调性最大的空格子的坐标，转换成对应的map,最后排序，返回分数最高的那一个map</li>
+<li>如果搜索深度不为0，则先对原面板分别进行每个有效的划动操作得到<code>boards</code>，再计算对应的评价分数和影响单调性最大的空格子的坐标得到<code>scores-pos</code>，分别将评价分数和空格子坐标保存为<code>scores</code>和<code>pos</code>。对<code>boards</code>分别在对应的<code>pos</code>位置上填入“2”得到<code>new-boards</code>。对<code>new-boards</code>里的每个面板调用深度减1的<code>next-move</code>，返回对应的包含最优划动方向和评价分数的map。再提取出评价分数，乘以1.1（因为我还没想到这个比值h应该怎么取才合适，所以随便扔个数进去试试先）再，与<code>scores</code>里未填入“2”时的评价分数相加得到新的评价分数。最后就是排序，返回分数最高的那一个map</li>
+</ul>
+
+<p>6.最后定义一个<code>ai-player</code>返回特定搜索深度（如3）的最优划动方向。以及一个<code>-main</code>函数运行游戏。</p>
+
+<pre><code>(defn ai-player [board]
+  (:dir (next-move board 3 3)))
+
+(defn -main []
+  (auto-play (init-game) ai-player))
+</code></pre>
+
+<p>运行一下<code>-main</code>，那些面板就“啾，啾。。。”地在我面前刷过，在168秒之后跑出了这个：</p>
+
+<pre><code>    4       2     512       4
+  256      16    1024       2
+  128      64      32       8
+    4       8       4    2048
+</code></pre>
+
+<p><br>
+感动得泪流满面啊`(T﹏T)′</p>
+
+<p>为了再验证下效果，再跑了100遍，结果如下。93%的成功率还算不错&lt;(‾︶‾)&gt;<br>
+要是能跑个<code>16384</code>出来就更好了！(づ￣ 3￣)づ
+<br>
+
+<figure >
+    
+        <img src="/media/2048_chart.png" />
+    
+    
+</figure>
+
+<br>
+<br></p>
+
+<h4 id="总结:fbce43adeb5f9117deccb9fa41206555">总结</h4>
+
+<ul>
+<li>函数式是不是很简洁呢？游戏核心部分就那几个函数，加起来也不过80行。我一开始也试着用<code>Python</code>来写，<code>Python</code>的列表解析用着也很爽，但是感觉有时候还是不够<code>Clojure</code>爽。</li>
+<li>那个AI真的是个坑，那些参数还要优化，而且想突破<code>16384</code>的话看来还得用<code>Minimax</code>或<code>Expectiminimax</code>。嗯，等有空才填吧。。。（很有可能会跳票）→_→</li>
+</ul>
+
+<h2 id="code:fbce43adeb5f9117deccb9fa41206555">Code</h2>
+
+<p>The code can be found on GitHub at the following link <a href="https://github.com/ChuitoChan/clojure-2048ai">https://github.com/ChuitoChan/clojure-2048ai</a></p>
+
+
+				<hr>
+
+				<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'spf13';
+    var disqus_identifier = 'https:\/\/chuitochan.github.io\/post\/2048-in-clojure\/';
+    var disqus_title = '2048 in Clojure';
+    var disqus_url = 'https:\/\/chuitochan.github.io\/post\/2048-in-clojure\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				</section>
+
+			</article>
+			<footer class="site-footer">
+	<p class="text">&copy; 2016 - Released under the MIT license<br>Powered by <a href="//gohugo.io/">Hugo</a> with the <a href="//github.com/digitalcraftsman/hugo-type-theme">Type Theme</a></p>
+</footer>
+
+
+		</div>
+	</body>
+</html>
