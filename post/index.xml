@@ -6,8 +6,155 @@
     <description>Recent content in Posts on Chuito&#39;s fairyland</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Aug 2015 23:34:50 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 27 Feb 2016 12:11:38 +0800</lastBuildDate>
     <atom:link href="http://chuitochan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Cluster Analysis —— K-means</title>
+      <link>http://chuitochan.github.io/post/cluster-analysis/</link>
+      <pubDate>Sat, 27 Feb 2016 12:11:38 +0800</pubDate>
+      
+      <guid>http://chuitochan.github.io/post/cluster-analysis/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/K-means_clustering&#34;&gt;K-means&lt;/a&gt; is one of the most popular clustering algorithms due to its ease of implementation and scalabity to different datasets. The idea of K-means is really simple. It aims to partition N obverstions into K clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster.&lt;/p&gt;
+
+&lt;p&gt;The procedure of k-means is:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Intialize the number of clusters we want to find, and their initial means;&lt;/li&gt;
+&lt;li&gt;Assign the observations to the cluster whose mean is closest to the observation given the &lt;code&gt;distance&lt;/code&gt; function we defined;&lt;/li&gt;
+&lt;li&gt;Update the mean in all clusters given the &lt;code&gt;average&lt;/code&gt; function we defined;&lt;/li&gt;
+&lt;li&gt;Repeat step 2 and 3 until the assignment is stable.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In step 2, given a particular point and the &lt;code&gt;distance&lt;/code&gt; function, we want to find which of the means is closest.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(def closest [distance means point]
+  (apply min-key #(distance point %) means))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can groups the points.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn point-groups [means points distance]
+  (group-by #(closest distance means %) points))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In step 3, we need to update the means given the &lt;code&gt;average&lt;/code&gt; function and the groups of points.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn new-means [average groups]
+  (mapv average (vals groups)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we combine step 2 and step 3 into a &lt;code&gt;update-means&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn update-means [points distance average means]
+  (new-means average (point-groups means points distance)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To get the iteration until the groups(means) stop changing, we define a function below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn take-while-unstable [[x y &amp;amp;s :as xs]]
+  (when x
+    (if (= x y)
+      [x]
+      (cons x (take-while-unstable (next xs))))))
+      
+(take-while-unstable [1 2 3 4 4 5 2])
+;=&amp;gt; (1 2 3 4)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, the iteration and result of clustering are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(defn k-means-iteration [points means distance average]
+  (take-while-unstable
+    (map #(vals (point-groups % points distance))
+         (iterate #(update-means points distance average %) means))))
+
+(def k-means (comp last k-means-iteration))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To test our k-means algorithm, we generate 200 training points. 100 points are sampled from a multivariate normal distribution with mean &lt;code&gt;[-1 -1]&lt;/code&gt; and covariance &lt;code&gt;[[1 0] [0 1]]&lt;/code&gt;, and 100 points are sampled from a multivariate normal distribution with mean &lt;code&gt;[2 2]&lt;/code&gt; and covariance &lt;code&gt;[[2 0] [0 2]]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://chuitochan.github.io/media/k-means/origin1.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;origin&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://chuitochan.github.io/media/k-means/origin2.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;origin-classified&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;And we need to define our &lt;code&gt;distance&lt;/code&gt; function and &lt;code&gt;average&lt;/code&gt; function. In this case, we use Euclidean distance.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(require &#39;[clojure.core.matrix :as mat])
+(defn eucli-distance [p1 p2]
+  (mat/dot p1 p2))
+
+(defn eucli-average [ps]
+  (mat/div (reduce mat/add ps) (count ps)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can get the result of k-means clustering by &lt;code&gt;k-means&lt;/code&gt; function,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(def ms [[0 0] [2 2]])
+(k-means-iteration points ms eucli-distance eucli-average)
+&lt;/code&gt;&lt;/pre&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://chuitochan.github.io/media/k-means/classified.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;k-means-classified&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;or observe the iteration by &lt;code&gt;k-means-iteration&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; we deliberately use a wrose initial value 
+(def ms [[-2 -2] [-3 5]]) 
+(k-means-iteration ms eucli-distance eucli-average)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://chuitochan.github.io/media/k-means/iteration.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;iteration&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;K-means is simple and scalable, but it&amp;rsquo;s stochastic and sometimes gets stuck in local optima and misses the global optimum solution for clustering. In the future posts, I will explore more sophisticated clustering methods.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>2048 in Clojure</title>
